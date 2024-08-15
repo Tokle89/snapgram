@@ -27,7 +27,18 @@ export const createUserAccount = async (user: INewUser) => {
 
 export const saveUserToDB = async (user: { accountId: string; email: string; name: string; imageUrl: URL; username?: string }) => {
   try {
-    const newUsers = await databases.createDocument(appwriteConfig.databaseId, appwriteConfig.userCollectionId, ID.unique(), user);
+    const newUser = await databases.createDocument(appwriteConfig.databaseId, appwriteConfig.userCollectionId, ID.unique(), user);
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const signInAccount = async (user: { email: string; password: string }) => {
+  try {
+    const session = await account.createSession(user.email, user.password);
+    return session;
   } catch (error) {
     console.error(error);
     return error;
